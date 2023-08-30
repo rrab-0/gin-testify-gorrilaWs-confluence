@@ -1,0 +1,178 @@
+basePath: /
+definitions:
+  mahasiswa.AllMahasiswaResponse:
+    properties:
+      mahasiswa:
+        items:
+          $ref: '#/definitions/mahasiswa.Mahasiswa'
+        type: array
+    type: object
+  mahasiswa.Mahasiswa:
+    properties:
+      jurusan:
+        type: string
+      nama:
+        type: string
+      nim:
+        type: string
+    type: object
+  mahasiswa.SuccessMessage:
+    properties:
+      message:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8081
+info:
+  contact:
+    email: holyWow@macaroni.dev
+    name: holy wow
+    url: http://comehere.dev
+  description: This is where we do crud for mahasiswas.
+  license:
+    name: MIT
+    url: http://mit.dev
+  termsOfService: http://youtube.com
+  title: Crud Mahasiswa
+  version: "6.9"
+paths:
+  /api/v1/mahasiswa/:
+    get:
+      consumes:
+      - application/json
+      description: Returns all mahasiswa
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mahasiswa.AllMahasiswaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+      summary: Returns all mahasiswa
+      tags:
+      - get
+    post:
+      consumes:
+      - application/json
+      description: Create a new mahasiswa with their NIM, Nama, and Jurusan.
+      parameters:
+      - description: Mahasiswa need to have NIM, Nama, and Jurusan
+        in: body
+        name: Mahasiswa
+        required: true
+        schema:
+          $ref: '#/definitions/mahasiswa.Mahasiswa'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+      summary: Create a new mahasiswa
+      tags:
+      - post
+  /api/v1/mahasiswa/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes one mahasiswa
+      parameters:
+      - description: Mahasiswa ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+      summary: Deletes one mahasiswa
+      tags:
+      - delete
+    get:
+      consumes:
+      - application/json
+      description: Returns one mahasiswa
+      parameters:
+      - description: Mahasiswa ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mahasiswa.Mahasiswa'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+      summary: Returns one mahasiswa
+      tags:
+      - get
+    patch:
+      consumes:
+      - application/json
+      description: Updates one mahasiswa
+      parameters:
+      - description: Mahasiswa ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mahasiswa.SuccessMessage'
+      summary: Updates one mahasiswa
+      tags:
+      - patch
+swagger: "2.0"

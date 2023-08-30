@@ -13,6 +13,21 @@ type Mahasiswa struct {
 	Jurusan string `json:"jurusan"`
 }
 
+type SuccessMessage struct {
+	Message string
+}
+
+// Post a new Mahasiswa godoc
+// @Summary      Create a new mahasiswa
+// @Description  Create a new mahasiswa with their NIM, Nama, and Jurusan.
+// @Tags         post
+// @Accept       json
+// @Produce      json
+// @Param        Mahasiswa body Mahasiswa true "Mahasiswa need to have NIM, Nama, and Jurusan"
+// @Success      200  {object} SuccessMessage
+// @Failure      400  {object} SuccessMessage
+// @Failure      500  {object} SuccessMessage
+// @Router       /api/v1/mahasiswa/ [post]
 func Create(c *gin.Context) {
 	var db = config.DB
 	mahasiswa := new(Mahasiswa)
@@ -43,6 +58,20 @@ func Create(c *gin.Context) {
 	})
 }
 
+type AllMahasiswaResponse struct {
+	Mahasiswa []Mahasiswa `json:"mahasiswa"`
+}
+
+// Get ALl Mahasiswa godoc
+// @Summary      Returns all mahasiswa
+// @Description  Returns all mahasiswa
+// @Tags         get
+// @Accept       json
+// @Produce      json
+// @Success      200  {object} AllMahasiswaResponse
+// @Failure      400  {object} SuccessMessage
+// @Failure      500  {object} SuccessMessage
+// @Router       /api/v1/mahasiswa/ [get]
 func Reads(c *gin.Context) {
 	var db = config.DB
 
@@ -68,10 +97,20 @@ func Reads(c *gin.Context) {
 }
 
 type MahasiswaId struct {
-	ID int `form:"id"`
+	ID int `uri:"id"`
 }
 
-// grabs uri
+// Get Mahasiswa by ID godoc
+// @Summary      Returns one mahasiswa
+// @Description  Returns one mahasiswa
+// @Tags         get
+// @Accept       json
+// @Produce      json
+// @Param		 id path int true "Mahasiswa ID"
+// @Success      200  {object} Mahasiswa
+// @Failure      400  {object} SuccessMessage
+// @Failure      500  {object} SuccessMessage
+// @Router       /api/v1/mahasiswa/{id} [get]
 func Read(c *gin.Context) {
 	var db = config.DB
 	id := new(MahasiswaId)
@@ -105,20 +144,98 @@ func Read(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-// func Update(c *gin.Context) {
-// 	var db = config.DB
-// 	id := new(MahasiswaId)
+// Update Mahasiswa by ID godoc
+// @Summary      Updates one mahasiswa
+// @Description  Updates one mahasiswa
+// @Tags         patch
+// @Accept       json
+// @Produce      json
+// @Param		 id path int true "Mahasiswa ID"
+// @Success      200  {object} SuccessMessage
+// @Failure      400  {object} SuccessMessage
+// @Failure      500  {object} SuccessMessage
+// @Router       /api/v1/mahasiswa/{id} [patch]
+func Update(c *gin.Context) {
+	var db = config.DB
+	id := new(MahasiswaId)
 
-// 	if err := c.ShouldBindUri(&id); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"error": err.Error(),
-// 		})
-// 	}
+	if err := c.ShouldBindUri(&id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
 
-// 	query := ``
-// }
+	// get
+	getQuery := `
+	SELECT nim, nama, jurusan 
+	FROM mahasiswa 
+	WHERE "id" = $1`
+	row := db.QueryRow(getQuery, id.ID)
+	var (
+		nim     string
+		nama    string
+		jurusan string
+	)
 
-// grabs uri too
+	if err := row.Scan(&nim, &nama, &jurusan); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+
+	mahasiswa := new(Mahasiswa)
+	if err := c.Bind(&mahasiswa); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	if mahasiswa.NIM == "" {
+		mahasiswa.NIM = nim
+	}
+
+	if mahasiswa.Nama == "" {
+		mahasiswa.Nama = nama
+	}
+
+	if mahasiswa.Jurusan == "" {
+		mahasiswa.Jurusan = jurusan
+	}
+
+	// update
+	updateQuery := `
+	UPDATE mahasiswa
+	SET nim = $1, nama = $2, jurusan = $3
+	WHERE id = $4`
+
+	_, err := db.Query(updateQuery,
+		mahasiswa.NIM,
+		mahasiswa.Nama,
+		mahasiswa.Jurusan,
+		id.ID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Mahasiswa updated successfully.",
+	})
+}
+
+// Delete Mahasiswa by ID godoc
+// @Summary      Deletes one mahasiswa
+// @Description  Deletes one mahasiswa
+// @Tags         delete
+// @Accept       json
+// @Produce      json
+// @Param		 id path int true "Mahasiswa ID"
+// @Success      200  {object} SuccessMessage
+// @Failure      400  {object} SuccessMessage
+// @Failure      500  {object} SuccessMessage
+// @Router       /api/v1/mahasiswa/{id} [delete]
 func Destroy(c *gin.Context) {
 	var db = config.DB
 	id := new(MahasiswaId)
@@ -146,37 +263,3 @@ func Destroy(c *gin.Context) {
 		"message": "Mahasiswa deleted successfully.",
 	})
 }
-
-// // grabs query string
-// func Read(c *gin.Context) {
-// 	var db = config.DB
-// 	id := new(MahasiswaId)
-
-// 	if err := c.ShouldBind(&id); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"error": err.Error(),
-// 		})
-// 	}
-
-// 	query := `SELECT nim, nama, jurusan FROM mahasiswa WHERE "id" = $1`
-// 	row := db.QueryRow(query, id.ID)
-// 	var (
-// 		nim     string
-// 		nama    string
-// 		jurusan string
-// 	)
-
-// 	if err := row.Scan(&nim, &nama, &jurusan); err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{
-// 			"error": err,
-// 		})
-// 	}
-
-// 	response := Mahasiswa{
-// 		NIM:     nim,
-// 		Nama:    nama,
-// 		Jurusan: jurusan,
-// 	}
-
-// 	c.JSON(http.StatusOK, response)
-// }
