@@ -4,6 +4,8 @@ import (
 	"example/unit-test-hello-world/config"
 	"net/http"
 
+	ws "example/unit-test-hello-world/websocket"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -53,6 +55,7 @@ func Create(c *gin.Context) {
 		})
 	}
 
+	ws.SendWebSocketUpdate("Mahasiswa added successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa added successfully.",
 	})
@@ -93,6 +96,7 @@ func Reads(c *gin.Context) {
 		mahasiswas = append(mahasiswas, mahasiswa)
 	}
 
+	ws.SendWebSocketUpdate("Get all mahasiswa successfully.")
 	c.JSON(http.StatusOK, mahasiswas)
 }
 
@@ -141,6 +145,7 @@ func Read(c *gin.Context) {
 		Jurusan: jurusan,
 	}
 
+	ws.SendWebSocketUpdate("Get mahasiswa by ID successfully.")
 	c.JSON(http.StatusOK, response)
 }
 
@@ -220,6 +225,7 @@ func Update(c *gin.Context) {
 		})
 	}
 
+	ws.SendWebSocketUpdate("Mahasiswa updated successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa updated successfully.",
 	})
@@ -259,6 +265,7 @@ func Destroy(c *gin.Context) {
 		})
 	}
 
+	ws.SendWebSocketUpdate("Mahasiswa deleted successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa deleted successfully.",
 	})

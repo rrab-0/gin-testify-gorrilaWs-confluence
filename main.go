@@ -3,7 +3,7 @@ package main
 import (
 	"example/unit-test-hello-world/config"
 	mahasiswa "example/unit-test-hello-world/routes"
-	"example/unit-test-hello-world/ws"
+	ws "example/unit-test-hello-world/websocket"
 	"fmt"
 	"log"
 	"net/http"
@@ -18,7 +18,6 @@ import (
 )
 
 func homepage(c *gin.Context) {
-	go ws.BroadcastMessage(c.Writer, c.Request, "Hello WS")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Service is up and running.",
 	})
@@ -54,9 +53,7 @@ func main() {
 
 	// docs route
 	app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	app.GET("/ws", func(c *gin.Context) {
-		ws.WsHandler(c.Writer, c.Request)
-	})
+	app.GET("/ws", ws.HandleWebSocket)
 	app.GET("/", homepage)
 
 	v1 := app.Group("/api/v1")
