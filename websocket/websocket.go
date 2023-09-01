@@ -19,7 +19,7 @@ var (
 	clientsMu sync.Mutex
 )
 
-func HandleWebSocket(c *gin.Context) {
+func ReadIncomingMessage(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Println("Error upgrading connection:", err)
@@ -46,37 +46,6 @@ func HandleWebSocket(c *gin.Context) {
 	}
 }
 
-func StartWebSocketServer() {
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println("Error upgrading connection:", err)
-			return
-		}
-		defer func() {
-			conn.Close()
-
-			clientsMu.Lock()
-			delete(clients, conn)
-			clientsMu.Unlock()
-		}()
-
-		clientsMu.Lock()
-		clients[conn] = true
-		clientsMu.Unlock()
-
-		for {
-			_, _, err := conn.ReadMessage()
-			if err != nil {
-				log.Println("Error reading message:", err)
-				break
-			}
-		}
-	})
-
-	http.ListenAndServe(":8081", nil)
-}
-
 func BroadcastMessage(message string) {
 	clientsMu.Lock()
 	defer clientsMu.Unlock()
@@ -89,6 +58,6 @@ func BroadcastMessage(message string) {
 	}
 }
 
-func SendWebSocketUpdate(message string) {
+func SendMessage(message string) {
 	go BroadcastMessage(message)
 }

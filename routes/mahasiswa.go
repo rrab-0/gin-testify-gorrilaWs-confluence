@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CrudMahasiswa(router *gin.RouterGroup) {
+func Crud(router *gin.RouterGroup) {
 	router.POST("/", mahasiswa.Create)
 	router.GET("/", mahasiswa.Reads)
 	router.GET("/:id", mahasiswa.Read)

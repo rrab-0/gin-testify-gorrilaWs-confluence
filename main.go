@@ -11,20 +11,21 @@ import (
 
 	_ "example/unit-test-hello-world/docs"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
 
-func homepage(c *gin.Context) {
+func Homepage(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Service is up and running.",
 	})
 }
 
 // @title           Crud Mahasiswa
-// @version         6.9
+// @version         4.0
 // @description     This is where we do crud for mahasiswas.
 // @termsOfService  http://youtube.com
 
@@ -35,29 +36,30 @@ func homepage(c *gin.Context) {
 // @license.name  MIT
 // @license.url   http://mit.dev
 
-// @host      localhost:8081
+// @host      localhost:8080
 // @BasePath  /
 
 // @externalDocs.description  OpenAPI
 // @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	// load env
-	if envErr := godotenv.Load(".env"); envErr != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Println("Could not load .env")
 		os.Exit(1)
 	}
 
 	// init server & db
-	app := gin.Default()
 	config.InitDB("PostgreSQL")
+	app := gin.Default()
+	app.Use(cors.Default())
 
-	// docs route
+	// default routes
 	app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	app.GET("/ws", ws.HandleWebSocket)
-	app.GET("/", homepage)
+	app.GET("/ws", ws.ReadIncomingMessage)
+	app.GET("/", Homepage)
 
 	v1 := app.Group("/api/v1")
-	mahasiswa.CrudMahasiswa(v1.Group("/mahasiswa"))
+	mahasiswa.Crud(v1.Group("/mahasiswa"))
 
 	DEV_HOST := os.Getenv("DEV_HOST")
 	DEV_PORT := os.Getenv("DEV_PORT")

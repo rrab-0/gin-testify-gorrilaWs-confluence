@@ -1,0 +1,7 @@
+CREATE TABLE mahasiswa(
+	nim VARCHAR(50) NOT NULL,
+	nama VARCHAR(50) NOT NULL,
+	jurusan VARCHAR(100),
+	created_at TIMESTAMP NOT NULL,
+	id SERIAL PRIMARY KEY
+);

@@ -13,9 +13,9 @@
             "name": "MIT",
             "url": "http://mit.dev"
         },
-        "version": "6.9"
+        "version": "4.0"
     },
-    "host": "localhost:8081",
+    "host": "localhost:8080",
     "basePath": "/",
     "paths": {
         "/api/v1/mahasiswa/": {
@@ -28,7 +28,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "get"
+                    "mahasiswa"
                 ],
                 "summary": "Returns all mahasiswa",
                 "responses": {
@@ -61,7 +61,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "post"
+                    "mahasiswa"
                 ],
                 "summary": "Create a new mahasiswa",
                 "parameters": [
@@ -107,7 +107,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "get"
+                    "mahasiswa"
                 ],
                 "summary": "Returns one mahasiswa",
                 "parameters": [
@@ -149,7 +149,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "delete"
+                    "mahasiswa"
                 ],
                 "summary": "Deletes one mahasiswa",
                 "parameters": [
@@ -191,7 +191,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "patch"
+                    "mahasiswa"
                 ],
                 "summary": "Updates one mahasiswa",
                 "parameters": [

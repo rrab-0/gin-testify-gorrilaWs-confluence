@@ -24,7 +24,7 @@ definitions:
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: localhost:8081
+host: localhost:8080
 info:
   contact:
     email: holyWow@macaroni.dev
@@ -36,7 +36,7 @@ info:
     url: http://mit.dev
   termsOfService: http://youtube.com
   title: Crud Mahasiswa
-  version: "6.9"
+  version: "4.0"
 paths:
   /api/v1/mahasiswa/:
     get:
@@ -60,7 +60,7 @@ paths:
             $ref: '#/definitions/mahasiswa.SuccessMessage'
       summary: Returns all mahasiswa
       tags:
-      - get
+      - mahasiswa
     post:
       consumes:
       - application/json
@@ -89,7 +89,7 @@ paths:
             $ref: '#/definitions/mahasiswa.SuccessMessage'
       summary: Create a new mahasiswa
       tags:
-      - post
+      - mahasiswa
   /api/v1/mahasiswa/{id}:
     delete:
       consumes:
@@ -118,7 +118,7 @@ paths:
             $ref: '#/definitions/mahasiswa.SuccessMessage'
       summary: Deletes one mahasiswa
       tags:
-      - delete
+      - mahasiswa
     get:
       consumes:
       - application/json
@@ -146,7 +146,7 @@ paths:
             $ref: '#/definitions/mahasiswa.SuccessMessage'
       summary: Returns one mahasiswa
       tags:
-      - get
+      - mahasiswa
     patch:
       consumes:
       - application/json
@@ -174,5 +174,5 @@ paths:
             $ref: '#/definitions/mahasiswa.SuccessMessage'
       summary: Updates one mahasiswa
       tags:
-      - patch
+      - mahasiswa
 swagger: "2.0"

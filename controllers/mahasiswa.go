@@ -22,7 +22,7 @@ type SuccessMessage struct {
 // Post a new Mahasiswa godoc
 // @Summary      Create a new mahasiswa
 // @Description  Create a new mahasiswa with their NIM, Nama, and Jurusan.
-// @Tags         post
+// @Tags         mahasiswa
 // @Accept       json
 // @Produce      json
 // @Param        Mahasiswa body Mahasiswa true "Mahasiswa need to have NIM, Nama, and Jurusan"
@@ -55,7 +55,7 @@ func Create(c *gin.Context) {
 		})
 	}
 
-	ws.SendWebSocketUpdate("Mahasiswa added successfully.")
+	ws.SendMessage("Mahasiswa added successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa added successfully.",
 	})
@@ -68,7 +68,7 @@ type AllMahasiswaResponse struct {
 // Get ALl Mahasiswa godoc
 // @Summary      Returns all mahasiswa
 // @Description  Returns all mahasiswa
-// @Tags         get
+// @Tags         mahasiswa
 // @Accept       json
 // @Produce      json
 // @Success      200  {object} AllMahasiswaResponse
@@ -90,13 +90,14 @@ func Reads(c *gin.Context) {
 
 	for rows.Next() {
 		var mahasiswa Mahasiswa
-		if err := rows.Scan(&mahasiswa.NIM, &mahasiswa.Nama, &mahasiswa.Jurusan); err != nil {
+		if err := rows.Scan(
+			&mahasiswa.NIM, &mahasiswa.Nama, &mahasiswa.Jurusan); err != nil {
 			return
 		}
 		mahasiswas = append(mahasiswas, mahasiswa)
 	}
 
-	ws.SendWebSocketUpdate("Get all mahasiswa successfully.")
+	ws.SendMessage("Get all mahasiswa successfully.")
 	c.JSON(http.StatusOK, mahasiswas)
 }
 
@@ -107,7 +108,7 @@ type MahasiswaId struct {
 // Get Mahasiswa by ID godoc
 // @Summary      Returns one mahasiswa
 // @Description  Returns one mahasiswa
-// @Tags         get
+// @Tags         mahasiswa
 // @Accept       json
 // @Produce      json
 // @Param		 id path int true "Mahasiswa ID"
@@ -135,7 +136,7 @@ func Read(c *gin.Context) {
 
 	if err := row.Scan(&nim, &nama, &jurusan); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 	}
 
@@ -145,14 +146,14 @@ func Read(c *gin.Context) {
 		Jurusan: jurusan,
 	}
 
-	ws.SendWebSocketUpdate("Get mahasiswa by ID successfully.")
+	ws.SendMessage("Get mahasiswa by ID successfully.")
 	c.JSON(http.StatusOK, response)
 }
 
 // Update Mahasiswa by ID godoc
 // @Summary      Updates one mahasiswa
 // @Description  Updates one mahasiswa
-// @Tags         patch
+// @Tags         mahasiswa
 // @Accept       json
 // @Produce      json
 // @Param		 id path int true "Mahasiswa ID"
@@ -225,7 +226,7 @@ func Update(c *gin.Context) {
 		})
 	}
 
-	ws.SendWebSocketUpdate("Mahasiswa updated successfully.")
+	ws.SendMessage("Mahasiswa updated successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa updated successfully.",
 	})
@@ -234,7 +235,7 @@ func Update(c *gin.Context) {
 // Delete Mahasiswa by ID godoc
 // @Summary      Deletes one mahasiswa
 // @Description  Deletes one mahasiswa
-// @Tags         delete
+// @Tags         mahasiswa
 // @Accept       json
 // @Produce      json
 // @Param		 id path int true "Mahasiswa ID"
@@ -265,7 +266,7 @@ func Destroy(c *gin.Context) {
 		})
 	}
 
-	ws.SendWebSocketUpdate("Mahasiswa deleted successfully.")
+	ws.SendMessage("Mahasiswa deleted successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa deleted successfully.",
 	})

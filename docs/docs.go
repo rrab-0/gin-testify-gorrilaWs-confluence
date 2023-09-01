@@ -35,7 +35,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "get"
+                    "mahasiswa"
                 ],
                 "summary": "Returns all mahasiswa",
                 "responses": {
@@ -68,7 +68,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "post"
+                    "mahasiswa"
                 ],
                 "summary": "Create a new mahasiswa",
                 "parameters": [
@@ -114,7 +114,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "get"
+                    "mahasiswa"
                 ],
                 "summary": "Returns one mahasiswa",
                 "parameters": [
@@ -156,7 +156,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "delete"
+                    "mahasiswa"
                 ],
                 "summary": "Deletes one mahasiswa",
                 "parameters": [
@@ -198,7 +198,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "patch"
+                    "mahasiswa"
                 ],
                 "summary": "Updates one mahasiswa",
                 "parameters": [
@@ -276,8 +276,8 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "6.9",
-	Host:             "localhost:8081",
+	Version:          "4.0",
+	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Crud Mahasiswa",
