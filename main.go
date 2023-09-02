@@ -61,7 +61,6 @@ func main() {
 	v1 := app.Group("/api/v1")
 	mahasiswa.Crud(v1.Group("/mahasiswa"))
 
-	DEV_HOST := os.Getenv("DEV_HOST")
 	DEV_PORT := os.Getenv("DEV_PORT")
-	app.Run(fmt.Sprintf("%v:%v", DEV_HOST, DEV_PORT))
+	app.Run(fmt.Sprintf(":%v", DEV_PORT))
 }

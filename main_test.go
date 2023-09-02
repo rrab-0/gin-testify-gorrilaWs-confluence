@@ -285,10 +285,7 @@ func TestDelete(t *testing.T) {
 	}
 
 	row := seedMahasiswaWithReturn(db)
-	var (
-		id int
-	)
-
+	var id int
 	if err := row.Scan(&id); err != nil {
 		t.Errorf("ERROR: Expected error to be %v, got %v", nil, err)
 	}
@@ -357,10 +354,7 @@ func TestUpdate(t *testing.T) {
 	}
 
 	row := seedMahasiswaWithReturn(db)
-	var (
-		id int
-	)
-
+	var id int
 	if err := row.Scan(&id); err != nil {
 		t.Errorf("ERROR: Expected error to be %v, got %v", nil, err)
 	}
@@ -368,7 +362,6 @@ func TestUpdate(t *testing.T) {
 	newlyUpdatedMahasiswa := UpdateMahasiswaTest{
 		NIM: testCase.expectedUpdatedNIM,
 	}
-
 	reqBody, _ := json.Marshal(newlyUpdatedMahasiswa)
 	req, _ := http.NewRequest(http.MethodPatch, testCase.path, bytes.NewBuffer(reqBody))
 	req.Header.Add("Content-Type", "application/json")
@@ -383,10 +376,7 @@ func TestUpdate(t *testing.T) {
 	mahasiswa.Update(c)
 
 	updatedRow := checkUpdatedMahasiswaNIM(db, id)
-	var (
-		NIM string
-	)
-
+	var NIM string
 	if err := updatedRow.Scan(&NIM); err != nil {
 		t.Errorf("ERROR: Expected error to be %v, got %v", nil, err)
 	}
