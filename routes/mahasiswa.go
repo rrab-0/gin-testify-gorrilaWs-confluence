@@ -1,12 +1,14 @@
-package mahasiswa
+package routes
 
 import (
-	mahasiswa "example/unit-test-hello-world/controllers"
+	"example/unit-test-hello-world/controllers"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Crud(router *gin.RouterGroup) {
+func Mahasiswa(router *gin.RouterGroup) {
+	mahasiswa := &controllers.MahasiswaController{}
+
 	router.POST("/", mahasiswa.Create)
 	router.GET("/", mahasiswa.Reads)
 	router.GET("/:id", mahasiswa.Read)

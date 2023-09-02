@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"example/unit-test-hello-world/config"
-	mahasiswa "example/unit-test-hello-world/controllers"
+	"example/unit-test-hello-world/controllers"
 	"fmt"
 	"io"
 	"log"
@@ -51,6 +51,8 @@ func SetUpDB() (*sql.DB, error) {
 	return db, err
 }
 
+var mahasiswa = &controllers.MahasiswaController{}
+
 func TestMain(m *testing.M) {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Println("ERROR: Could not load .env")
@@ -83,7 +85,7 @@ type TestCase struct {
 	expectedUpdatedNIM string
 }
 
-var dummyMahasiswa = mahasiswa.Mahasiswa{
+var dummyMahasiswa = controllers.Mahasiswa{
 	NIM:     "321",
 	Nama:    "dummy",
 	Jurusan: "dummy",
@@ -223,7 +225,7 @@ func TestCreate(t *testing.T) {
 		t.Errorf("ERROR: Expected error to be %v, got %v", nil, err)
 	}
 
-	newMahasiswa := mahasiswa.Mahasiswa{
+	newMahasiswa := controllers.Mahasiswa{
 		NIM:     dummyMahasiswa.NIM,
 		Nama:    dummyMahasiswa.Nama,
 		Jurusan: dummyMahasiswa.Jurusan,

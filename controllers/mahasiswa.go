@@ -1,4 +1,4 @@
-package mahasiswa
+package controllers
 
 import (
 	"example/unit-test-hello-world/config"
@@ -8,6 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+type MahasiswaController struct{}
 
 type Mahasiswa struct {
 	NIM     string `json:"nim"`
@@ -30,7 +32,7 @@ type SuccessMessage struct {
 // @Failure      400  {object} SuccessMessage
 // @Failure      500  {object} SuccessMessage
 // @Router       /api/v1/mahasiswa/ [post]
-func Create(c *gin.Context) {
+func (m *MahasiswaController) Create(c *gin.Context) {
 	var db = config.DB
 	mahasiswa := new(Mahasiswa)
 
@@ -75,7 +77,7 @@ type AllMahasiswaResponse struct {
 // @Failure      400  {object} SuccessMessage
 // @Failure      500  {object} SuccessMessage
 // @Router       /api/v1/mahasiswa/ [get]
-func Reads(c *gin.Context) {
+func (m *MahasiswaController) Reads(c *gin.Context) {
 	var db = config.DB
 
 	query := `SELECT nim, nama, jurusan FROM mahasiswa`
@@ -116,7 +118,7 @@ type MahasiswaId struct {
 // @Failure      400  {object} SuccessMessage
 // @Failure      500  {object} SuccessMessage
 // @Router       /api/v1/mahasiswa/{id} [get]
-func Read(c *gin.Context) {
+func (m *MahasiswaController) Read(c *gin.Context) {
 	var db = config.DB
 	id := new(MahasiswaId)
 
@@ -161,7 +163,7 @@ func Read(c *gin.Context) {
 // @Failure      400  {object} SuccessMessage
 // @Failure      500  {object} SuccessMessage
 // @Router       /api/v1/mahasiswa/{id} [patch]
-func Update(c *gin.Context) {
+func (m *MahasiswaController) Update(c *gin.Context) {
 	var db = config.DB
 	id := new(MahasiswaId)
 
@@ -171,12 +173,8 @@ func Update(c *gin.Context) {
 		})
 	}
 
-	// get
-	getQuery := `
-	SELECT nim, nama, jurusan 
-	FROM mahasiswa 
-	WHERE "id" = $1`
-	row := db.QueryRow(getQuery, id.ID)
+	query := `SELECT nim, nama, jurusan FROM mahasiswa WHERE "id" = $1`
+	row := db.QueryRow(query, id.ID)
 	var (
 		nim     string
 		nama    string
@@ -185,51 +183,18 @@ func Update(c *gin.Context) {
 
 	if err := row.Scan(&nim, &nama, &jurusan); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-		})
-	}
-
-	mahasiswa := new(Mahasiswa)
-	if err := c.Bind(&mahasiswa); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 	}
 
-	if mahasiswa.NIM == "" {
-		mahasiswa.NIM = nim
+	response := Mahasiswa{
+		NIM:     nim,
+		Nama:    nama,
+		Jurusan: jurusan,
 	}
 
-	if mahasiswa.Nama == "" {
-		mahasiswa.Nama = nama
-	}
-
-	if mahasiswa.Jurusan == "" {
-		mahasiswa.Jurusan = jurusan
-	}
-
-	// update
-	updateQuery := `
-	UPDATE mahasiswa
-	SET nim = $1, nama = $2, jurusan = $3
-	WHERE id = $4`
-
-	_, err := db.Query(updateQuery,
-		mahasiswa.NIM,
-		mahasiswa.Nama,
-		mahasiswa.Jurusan,
-		id.ID)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-		})
-	}
-
-	ws.SendMessage("Mahasiswa updated successfully.")
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Mahasiswa updated successfully.",
-	})
+	ws.SendMessage("Get mahasiswa by ID successfully.")
+	c.JSON(http.StatusOK, response)
 }
 
 // Delete Mahasiswa by ID godoc
@@ -243,7 +208,7 @@ func Update(c *gin.Context) {
 // @Failure      400  {object} SuccessMessage
 // @Failure      500  {object} SuccessMessage
 // @Router       /api/v1/mahasiswa/{id} [delete]
-func Destroy(c *gin.Context) {
+func (m *MahasiswaController) Destroy(c *gin.Context) {
 	var db = config.DB
 	id := new(MahasiswaId)
 

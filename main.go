@@ -2,7 +2,7 @@ package main
 
 import (
 	"example/unit-test-hello-world/config"
-	mahasiswa "example/unit-test-hello-world/routes"
+	"example/unit-test-hello-world/routes"
 	ws "example/unit-test-hello-world/websocket"
 	"fmt"
 	"log"
@@ -59,7 +59,7 @@ func main() {
 	app.GET("/", Homepage)
 
 	v1 := app.Group("/api/v1")
-	mahasiswa.Crud(v1.Group("/mahasiswa"))
+	routes.Mahasiswa(v1.Group("/mahasiswa"))
 
 	DEV_PORT := os.Getenv("DEV_PORT")
 	app.Run(fmt.Sprintf(":%v", DEV_PORT))
