@@ -19,7 +19,7 @@ var (
 	clientsMu sync.Mutex
 )
 
-func ReadIncomingMessage(c *gin.Context) {
+func ReadMessage(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Println("Error upgrading connection:", err)

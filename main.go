@@ -2,6 +2,7 @@ package main
 
 import (
 	"example/unit-test-hello-world/config"
+	"example/unit-test-hello-world/kafka"
 	"example/unit-test-hello-world/routes"
 	ws "example/unit-test-hello-world/websocket"
 	"fmt"
@@ -55,7 +56,8 @@ func main() {
 
 	// default routes
 	app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	app.GET("/ws", ws.ReadIncomingMessage)
+	app.GET("/ws", ws.ReadMessage)
+	app.GET("/kafka", kafka.ReadMessageThenSendToSlashWS)
 	app.GET("/", Homepage)
 
 	v1 := app.Group("/api/v1")
