@@ -173,8 +173,12 @@ func (m *MahasiswaController) Update(c *gin.Context) {
 		})
 	}
 
-	query := `SELECT nim, nama, jurusan FROM mahasiswa WHERE "id" = $1`
-	row := db.QueryRow(query, id.ID)
+	// get
+	getQuery := `
+	SELECT nim, nama, jurusan 
+	FROM mahasiswa 
+	WHERE "id" = $1`
+	row := db.QueryRow(getQuery, id.ID)
 	var (
 		nim     string
 		nama    string
@@ -183,18 +187,51 @@ func (m *MahasiswaController) Update(c *gin.Context) {
 
 	if err := row.Scan(&nim, &nama, &jurusan); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+
+	mahasiswa := new(Mahasiswa)
+	if err := c.Bind(&mahasiswa); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 	}
 
-	response := Mahasiswa{
-		NIM:     nim,
-		Nama:    nama,
-		Jurusan: jurusan,
+	if mahasiswa.NIM == "" {
+		mahasiswa.NIM = nim
 	}
 
-	ws.SendMessage("Get mahasiswa by ID successfully.")
-	c.JSON(http.StatusOK, response)
+	if mahasiswa.Nama == "" {
+		mahasiswa.Nama = nama
+	}
+
+	if mahasiswa.Jurusan == "" {
+		mahasiswa.Jurusan = jurusan
+	}
+
+	// update
+	updateQuery := `
+	UPDATE mahasiswa
+	SET nim = $1, nama = $2, jurusan = $3
+	WHERE id = $4`
+
+	_, err := db.Query(updateQuery,
+		mahasiswa.NIM,
+		mahasiswa.Nama,
+		mahasiswa.Jurusan,
+		id.ID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+
+	ws.SendMessage("Mahasiswa updated successfully.")
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Mahasiswa updated successfully.",
+	})
 }
 
 // Delete Mahasiswa by ID godoc

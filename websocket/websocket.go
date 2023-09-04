@@ -43,6 +43,8 @@ func ReadIncomingMessage(c *gin.Context) {
 			log.Println("Error reading message:", err)
 			break
 		}
+
+		// send to kafka
 	}
 }
 
