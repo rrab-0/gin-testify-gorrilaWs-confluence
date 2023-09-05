@@ -3,8 +3,8 @@ package main
 import (
 	"example/unit-test-hello-world/config"
 	"example/unit-test-hello-world/kafka"
+	"example/unit-test-hello-world/localWebsocket"
 	"example/unit-test-hello-world/routes"
-	ws "example/unit-test-hello-world/websocket"
 	"fmt"
 	"log"
 	"net/http"
@@ -20,6 +20,7 @@ import (
 )
 
 func Homepage(c *gin.Context) {
+	localWebsocket.Writer("hello websocket!")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Service is up and running.",
 	})
@@ -49,20 +50,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	// init server & db
+	// init server & db & kafka consumer
+	go kafka.ConsumerInit()
 	config.InitDB("PostgreSQL")
 	app := gin.Default()
 	app.Use(cors.Default())
 
 	// default routes
 	app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	app.GET("/ws", ws.ReadMessage)
-	app.GET("/kafka", kafka.ReadMessageThenSendToSlashWS)
+	app.GET("/ws", localWebsocket.Listener)
 	app.GET("/", Homepage)
 
 	v1 := app.Group("/api/v1")
 	routes.Mahasiswa(v1.Group("/mahasiswa"))
 
 	DEV_PORT := os.Getenv("DEV_PORT")
-	app.Run(fmt.Sprintf(":%v", DEV_PORT))
+	app.Run(fmt.Sprintf("localhost:%v", DEV_PORT))
 }

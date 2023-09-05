@@ -14,8 +14,8 @@ func main() {
 	}
 
 	topic := "purchases"
-	p, err := kafka.NewProducer(&conf)
 
+	p, err := kafka.NewProducer(&conf)
 	if err != nil {
 		fmt.Printf("Failed to create producer: %s", err)
 		os.Exit(1)
@@ -37,11 +37,11 @@ func main() {
 		}
 	}()
 
-	users := [...]string{"eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther"}
+	users := [...]string{"john", "jack", "jane", "june", "jan", "janice"}
 	items := [...]string{"book", "alarm clock", "t-shirts", "gift card", "batteries"}
 
-	for {
-		// for n := 0; n < 10; n++ {
+	// for {
+	for n := 0; n < 10; n++ {
 		key := users[rand.Intn(len(users))]
 		data := items[rand.Intn(len(items))]
 		p.Produce(&kafka.Message{

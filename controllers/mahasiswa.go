@@ -4,7 +4,7 @@ import (
 	"example/unit-test-hello-world/config"
 	"net/http"
 
-	ws "example/unit-test-hello-world/websocket"
+	"example/unit-test-hello-world/localWebsocket"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,7 +57,7 @@ func (m *MahasiswaController) Create(c *gin.Context) {
 		})
 	}
 
-	ws.SendMessage("Mahasiswa added successfully.")
+	localWebsocket.Writer("Mahasiswa added successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa added successfully.",
 	})
@@ -99,7 +99,7 @@ func (m *MahasiswaController) Reads(c *gin.Context) {
 		mahasiswas = append(mahasiswas, mahasiswa)
 	}
 
-	ws.SendMessage("Get all mahasiswa successfully.")
+	localWebsocket.Writer("Get all mahasiswa successfully.")
 	c.JSON(http.StatusOK, mahasiswas)
 }
 
@@ -148,7 +148,7 @@ func (m *MahasiswaController) Read(c *gin.Context) {
 		Jurusan: jurusan,
 	}
 
-	ws.SendMessage("Get mahasiswa by ID successfully.")
+	localWebsocket.Writer("Get mahasiswa by ID successfully.")
 	c.JSON(http.StatusOK, response)
 }
 
@@ -228,7 +228,7 @@ func (m *MahasiswaController) Update(c *gin.Context) {
 		})
 	}
 
-	ws.SendMessage("Mahasiswa updated successfully.")
+	localWebsocket.Writer("Mahasiswa updated successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa updated successfully.",
 	})
@@ -268,7 +268,7 @@ func (m *MahasiswaController) Destroy(c *gin.Context) {
 		})
 	}
 
-	ws.SendMessage("Mahasiswa deleted successfully.")
+	localWebsocket.Writer("Mahasiswa deleted successfully.")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Mahasiswa deleted successfully.",
 	})
